@@ -1,5 +1,6 @@
 "use client";
 import { React, useState, useEffect } from "react";
+
 export default function Select() {
   const [receipt, setReceipt] = useState({
     tax: 0,
@@ -23,7 +24,7 @@ export default function Select() {
     {
       id: 0,
       name: "",
-      total: 0,
+      total: 0.0,
       items: [],
     },
   ]);
@@ -60,6 +61,20 @@ export default function Select() {
     // sessionStorage.setItem("sendBack", formValue);
   }, []);
 
+  const calculateTotalPrice = () => {
+    person.forEach((person) => {
+      var totalPrice = 0.0;
+      person.items.forEach((item) => {
+        totalPrice =
+          totalPrice +
+          Number(item.price) / Number(receipt.item[item.id].sharedby);
+      });
+      console.log("Total Price: " + person.name + " " + totalPrice);
+      person.total = Number(totalPrice);
+    });
+    console.log(person.total);
+    handleTotal();
+  };
   const setCurrentPersontoArr = () => {
     let newPerson = [...person];
     let curr = currentPerson;
@@ -69,7 +84,16 @@ export default function Select() {
       receipt.item[curr.items[x].id].sharedby++;
       console.log(receipt.item[curr.items[x].id].sharedby);
     }
+    calculateTotalPrice();
+    handleTotal();
   };
+
+  const handleTotal = () => {
+    const newTotal = person.map((p) => p.total);
+    setTotal(newTotal);
+  };
+
+  const [total, setTotal] = useState([]);
 
   return (
     <div className="flex min-h-screen flex-col items-center gap-y-4 p-24">
@@ -82,7 +106,7 @@ export default function Select() {
               key={obj.id}
               onClick={() => (setCurrentPerson(obj), handleColor())}
             >
-              <p className="border-2 border-black rounded-md">{obj.name}</p>
+              <p className={`border-2 ${borderColor} rounded-md`}>{obj.name}</p>
             </button>
           ))}
         </div>
@@ -146,12 +170,13 @@ export default function Select() {
                   {ite.price / receipt.item[ite.id].sharedby}
                 </li>
               ))}
+              <li>&nbsp;&nbsp;&nbsp;&nbsp;Total: RM{total[obj.id] || 0}</li>
             </ul>
           </div>
         ))}
       </div>
       <button onClick={setCurrentPersontoArr}>Submit</button>
-      <button onClick={() => console.log(person)}>tengok</button>
+      <button onClick={calculateTotalPrice}>tengok</button>
     </div>
   );
 }
