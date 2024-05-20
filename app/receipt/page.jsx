@@ -40,17 +40,24 @@ export default function receipt() {
     const values = [...items];
     var targeted = e.target.name;
     values[index][targeted] = e.target.value;
-    // console.log(values);
+    values[index]["total"] =
+      Number(values[index]["price"]) * Number(values[index]["qty"]);
+    // console.log("ni val tagett " + values[index]["total"]);
     setItems(values);
     setReceipt({
       ...receipt,
       item: values,
       total: Number(
-        items.reduce((total, item) => total + Number(item.price), 0)
+        items.reduce((totals, item) => totals + Number(item.total), 0)
       ),
     });
     console.log(receipt);
   };
+
+  useEffect(() => {
+    setReceipt(receipt);
+    console.log(receipt);
+  }, [receipt]);
 
   const handleDeleteField = (e, index) => {
     const value = [...items];
@@ -59,7 +66,7 @@ export default function receipt() {
     setReceipt({
       ...receipt,
       item: value,
-      total: items.reduce((total, item) => total + Number(item.price), 0),
+      total: items.reduce((total, item) => total + Number(item.total), 0),
     });
   };
 
@@ -131,8 +138,9 @@ export default function receipt() {
         <h2>Enter receipt:</h2>
         <div className="flex flex-row right-3 gap-2">
           <label className="pl-5"> Name:</label>
-          <label className="pl-[177px]"> qty:</label>
+          <label className="pl-[150px]"> qty:</label>
           <label className="pl-5"> price:</label>
+          <label className="pl-5"> total:</label>
         </div>
         {items.map((obj, index) => (
           <InputItems

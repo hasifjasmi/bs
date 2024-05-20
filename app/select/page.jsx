@@ -2,6 +2,11 @@
 import { React, useState, useEffect } from "react";
 
 export default function Select() {
+  const useForceUpdate = () => {
+    const [state, setState] = useState(0);
+    return () => setState((state) => state + 1);
+  };
+
   const [receipt, setReceipt] = useState({
     tax: 0,
     sst: 0,
@@ -20,7 +25,7 @@ export default function Select() {
     }
   };
 
-  const [person, setPerson] = useState([
+  const [persons, setPersons] = useState([
     {
       id: 0,
       name: "",
@@ -47,7 +52,7 @@ export default function Select() {
     var parsedPersonVal = personVal ? JSON.parse(personVal) : null;
 
     if (JSON.stringify(personVal) !== JSON.stringify(parsedPersonVal)) {
-      setPerson(parsedPersonVal);
+      setPersons(parsedPersonVal);
     }
 
     var receiptItem = sessionStorage.getItem("sendReceipt");
@@ -62,34 +67,41 @@ export default function Select() {
   }, []);
 
   const calculateTotalPrice = () => {
-    person.forEach((person) => {
+    persons.forEach((persons) => {
       var totalPrice = 0.0;
-      person.items.forEach((item) => {
+      persons.items.forEach((item) => {
         totalPrice =
           totalPrice +
-          Number(item.price) / Number(receipt.item[item.id].sharedby);
+          Number(item.total) / Number(receipt.item[item.id].sharedby);
       });
-      console.log("Total Price: " + person.name + " " + totalPrice);
-      person.total = Number(totalPrice);
+      console.log("Total Price: " + persons.name + " " + totalPrice);
+      persons.total = Number(totalPrice);
     });
-    console.log(person.total);
+    console.log(persons.total);
     handleTotal();
   };
   const setCurrentPersontoArr = () => {
-    let newPerson = [...person];
-    let curr = currentPerson;
-    newPerson[curr.id] = currentPerson;
-    setPerson(newPerson);
-    for (let x in curr.items) {
-      receipt.item[curr.items[x].id].sharedby++;
-      console.log(receipt.item[curr.items[x].id].sharedby);
-    }
-    calculateTotalPrice();
-    handleTotal();
+    try {
+      const newPerson = [...persons]; // array untuk semua person
+      const curr = currentPerson; // new object untuk masukkan dalam array
+      newPerson[curr.id] = currentPerson; // masukkan ke array
+      setPersons(newPerson); // set array
+      for (let x in curr.items) {
+        receipt.item[curr.items[x].id].sharedby++; // update sharedby for receipt array
+        // console.log(receipt.item[curr.items[x].id].sharedby);
+      }
+    } catch (error) {}
   };
+  useEffect(() => {
+    calculateTotalPrice();
+  }, [persons]);
+
+  // useEffect(() => {
+  //   setCurrentPersontoArr();
+  // }, [currentPerson]);
 
   const handleTotal = () => {
-    const newTotal = person.map((p) => p.total);
+    const newTotal = persons.map((p) => p.total);
     setTotal(newTotal);
   };
 
@@ -101,7 +113,7 @@ export default function Select() {
         <h2>List name:</h2>
 
         <div className="grid grid-cols-3 gap-3">
-          {person.map((obj) => (
+          {persons.map((obj) => (
             <button
               key={obj.id}
               onClick={() => (setCurrentPerson(obj), handleColor())}
@@ -110,7 +122,9 @@ export default function Select() {
             </button>
           ))}
         </div>
+        <div>Selected: {currentPerson && currentPerson.name}</div>
       </div>
+
       <div
         className="rounded-lg border border-transparent px-5 py-4 transition-colors border-gray-300 bg-gray-100 dark:border-neutral-700 dark:bg-neutral-800/30
         "
@@ -125,7 +139,7 @@ export default function Select() {
                 }`,
               }}
               key={ite.id}
-              onClick={() =>
+              onClick={() => {
                 setCurrentPerson({
                   ...currentPerson,
                   items: [
@@ -135,15 +149,16 @@ export default function Select() {
                       name: ite.name,
                       qty: ite.qty,
                       price: ite.price,
+                      total: ite.total,
                     },
                   ],
-                })
-              }
+                });
+              }}
             >
               <div className="w-3">{Number(ite.id) + 1}.</div>
               <div>{ite.name}</div>
               <div>x{ite.qty}</div>
-              <div>RM{ite.price}</div>
+              <div>RM{parseFloat(ite.total).toFixed(2)}</div>
               <div className="flex flex-row">
                 <svg
                   style={{ width: "20px", height: "20px" }}
@@ -158,25 +173,30 @@ export default function Select() {
         </div>
       </div>
       <div>
-        {person.map((obj) => (
-          <div key={obj.id}>
+        {persons.map((persons) => (
+          <div key={persons.id}>
             <h3>
-              {Number(obj.id) + 1}. {obj.name}
+              {Number(persons.id) + 1}. {persons.name}
             </h3>
             <ul>
-              {obj.items.map((ite) => (
+              {persons.items.map((ite) => (
                 <li key={ite.id}>
                   &nbsp;&nbsp;&nbsp;&nbsp;{ite.name}{" "}
-                  {ite.price / receipt.item[ite.id].sharedby}
+                  {parseFloat(
+                    ite.total / receipt.item[ite.id].sharedby
+                  ).toFixed(2)}
+                  {console.log(ite)}
                 </li>
               ))}
-              <li>&nbsp;&nbsp;&nbsp;&nbsp;Total: RM{total[obj.id] || 0}</li>
+              <li>
+                &nbsp;&nbsp;&nbsp;&nbsp;Total: RM
+                {parseFloat(total[persons.id]).toFixed(2) || 0}
+              </li>
             </ul>
           </div>
         ))}
       </div>
       <button onClick={setCurrentPersontoArr}>Submit</button>
-      <button onClick={calculateTotalPrice}>tengok</button>
     </div>
   );
 }
