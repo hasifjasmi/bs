@@ -66,6 +66,8 @@ export default function Select() {
     // sessionStorage.setItem("sendBack", formValue);
   }, []);
 
+  const [displaySelected, setDisplaySelected] = useState([]);
+
   const calculateTotalPrice = () => {
     persons.forEach((persons) => {
       var totalPrice = 0.0;
@@ -91,6 +93,7 @@ export default function Select() {
         // console.log(receipt.item[curr.items[x].id].sharedby);
       }
     } catch (error) {}
+    setDisplaySelected([]);
   };
   useEffect(() => {
     calculateTotalPrice();
@@ -129,6 +132,12 @@ export default function Select() {
         className="rounded-lg border border-transparent px-5 py-4 transition-colors border-gray-300 bg-gray-100 dark:border-neutral-700 dark:bg-neutral-800/30
         "
       >
+        <div>
+          Selected Items:
+          {displaySelected.map((str) => (
+            <div key={str.id}>{str}</div>
+          ))}
+        </div>
         <div className="flex flex-col">
           {receipt.item.map((ite) => (
             <button
@@ -153,6 +162,7 @@ export default function Select() {
                     },
                   ],
                 });
+                setDisplaySelected([...displaySelected, ite.name]);
               }}
             >
               <div className="w-3">{Number(ite.id) + 1}.</div>

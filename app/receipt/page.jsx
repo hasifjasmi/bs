@@ -134,11 +134,12 @@ export default function receipt() {
         </ol>
       </div>
       <button onClick={() => (window.location.href = "/")}>Edit</button>
+
       <div className="rounded-lg border border-transparent px-5 transition-colors border-gray-300 bg-gray-100 dark:border-neutral-700 dark:bg-neutral-800/30">
         <h2>Enter receipt:</h2>
         <div className="flex flex-row right-3 gap-2">
-          <label className="pl-5"> Name:</label>
-          <label className="pl-[150px]"> qty:</label>
+          <label className="pl-7"> Name:</label>
+          <label className="pl-20"> qty:</label>
           <label className="pl-5"> price:</label>
           <label className="pl-5"> total:</label>
         </div>

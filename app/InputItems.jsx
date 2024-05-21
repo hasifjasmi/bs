@@ -11,10 +11,10 @@ export default function InputItems({
 
   return (
     <div className="input-group">
-      <div className="flex flex-row gap-2 pb-2">
+      <div className="flex flex-row gap-2 pb-2 pl-3">
         <label className="w-3">{index + 1}. </label>
         <input
-          className="border border-black p-1"
+          className="border border-black p-1 w-28"
           placeholder={" Item " + placeholder}
           type={"text"}
           id={item}
