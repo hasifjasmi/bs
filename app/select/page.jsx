@@ -108,6 +108,10 @@ export default function Select() {
     setTotal(newTotal);
   };
 
+  const numPersons = persons.length;
+  const taxPerPerons = receipt.tax / numPersons;
+  const sstPerPerson = receipt.sst / numPersons;
+
   const [total, setTotal] = useState([]);
 
   return (
@@ -186,7 +190,7 @@ export default function Select() {
         {persons.map((persons) => (
           <div key={persons.id}>
             <h3>
-              {Number(persons.id) + 1}. {persons.name}
+              {Number(persons.id) + 1}.{persons.name}
             </h3>
             <ul>
               {persons.items.map((ite) => (
@@ -198,9 +202,13 @@ export default function Select() {
                   {console.log(ite)}
                 </li>
               ))}
+              <li>&nbsp;&nbsp;&nbsp;&nbsp;Tax: RM {taxPerPerons.toFixed(2)}</li>
+              <li>&nbsp;&nbsp;&nbsp;&nbsp;SST: RM {sstPerPerson.toFixed(2)}</li>
               <li>
                 &nbsp;&nbsp;&nbsp;&nbsp;Total: RM
-                {parseFloat(total[persons.id]).toFixed(2) || 0}
+                {parseFloat(
+                  total[persons.id] + taxPerPerons + sstPerPerson
+                ).toFixed(2) || 0}
               </li>
             </ul>
           </div>
