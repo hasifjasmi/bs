@@ -14,6 +14,8 @@ export default function Select() {
     item: [],
   });
 
+  const [crossCheck, setCrossCheck] = useState(0);
+  
   const [borderColor, setBorderColor] = useState("border-black");
 
   const handleColor = () => {
@@ -186,6 +188,7 @@ export default function Select() {
           ))}
         </div>
       </div>
+      <button onClick={setCurrentPersontoArr}>Submit</button>
       <div>
         {persons.map((persons) => (
           <div key={persons.id}>
@@ -214,7 +217,6 @@ export default function Select() {
           </div>
         ))}
       </div>
-      <button onClick={setCurrentPersontoArr}>Submit</button>
     </div>
   );
 }
