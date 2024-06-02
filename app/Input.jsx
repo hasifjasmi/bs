@@ -20,6 +20,7 @@ export default function Input({
           id={label}
           value={value}
           onChange={(e) => onChange(e, index)}
+          autoFocus
         />
         <div onClick={(e) => deleteField(e, index)}>X</div>
       </div>

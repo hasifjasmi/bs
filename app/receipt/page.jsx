@@ -124,8 +124,8 @@ export default function receipt() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center gap-y-4 p-24">
-      <div className="rounded-lg border border-transparent px-5 py-4 transition-colors border-gray-300 bg-gray-100 dark:border-neutral-700 dark:bg-neutral-800/30">
+    <div className="flex min-h-screen flex-col items-center gap-y-4 p-24 bg-white">
+      <div className="rounded-lg border border-transparent px-5 py-4 transition-colors border-gray-300 bg-[#F8ECF5]">
         <h2>List name:</h2>
         <ol>
           {person.map((obj) => (
@@ -135,11 +135,13 @@ export default function receipt() {
       </div>
       <button onClick={() => (window.location.href = "/")}>Edit</button>
 
-      <div className="rounded-lg border border-transparent px-5 transition-colors border-gray-300 bg-gray-100 dark:border-neutral-700 dark:bg-neutral-800/30">
-        <h2>Enter receipt:</h2>
-        <div className="flex flex-row right-3 gap-2">
-          <label className="pl-7"> Name:</label>
-          <label className="pl-20"> qty:</label>
+      <div className="rounded-lg border border-transparent px-5 transition-colors border-gray-300 bg-[#F9E1F2]">
+        <h2>
+          <b>Receipt:</b>
+        </h2>
+        <div className="flex flex-row right-3 gap-2 pb-1">
+          <label className="pl-8"> Name:</label>
+          <label className="pl-[75px]"> qty:</label>
           <label className="pl-5"> price:</label>
           <label className="pl-5"> total:</label>
         </div>
@@ -154,9 +156,11 @@ export default function receipt() {
           />
         ))}
         <div className="flex flex-col">
-          <button className="add-btn" onClick={handleAddField}>
-            Add new
-          </button>
+          <div className="pl-8">
+            <button className="" onClick={handleAddField}>
+              + Add new item
+            </button>
+          </div>
           <div className="flex flex-row gap-1 justify-end pr-[19px]">
             <div className="flex flex-col justify-end gap-1">
               <label htmlFor="">Subtotal :</label>
@@ -171,7 +175,7 @@ export default function receipt() {
                 id=""
                 className="w-[80px] border border-black px-1"
                 placeholder="Total"
-                value={receipt.total}
+                value={receipt.total.toFixed(2)}
                 onChange={(e) =>
                   setReceipt({ ...receipt, total: Number(e.target.value) })
                 }
@@ -206,12 +210,21 @@ export default function receipt() {
                 type="number"
                 className="w-[80px] border border-black px-1"
                 placeholder="Total"
-                value={receipt.total + receipt.tax + receipt.sst}
+                value={parseFloat(
+                  receipt.total + receipt.tax + receipt.sst
+                ).toFixed(2)}
                 readOnly
               />
             </div>
           </div>
-          <button onClick={handleSubmit}>Submit</button>
+        </div>
+        <div className="ml-5 pb-4">
+          <button
+            className="bg-[#aa0671] hover:bg-[#eb49b3] text-white font-bold py-1 px-4 rounded-full w-[120px]"
+            onClick={handleSubmit}
+          >
+            Submit
+          </button>
         </div>
       </div>
     </div>

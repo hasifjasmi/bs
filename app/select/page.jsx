@@ -15,7 +15,7 @@ export default function Select() {
   });
 
   const [crossCheck, setCrossCheck] = useState(0);
-  
+
   const [borderColor, setBorderColor] = useState("border-black");
 
   const handleColor = () => {
@@ -92,6 +92,19 @@ export default function Select() {
       setPersons(newPerson); // set array
       for (let x in curr.items) {
         receipt.item[curr.items[x].id].sharedby++; // update sharedby for receipt array
+        // setReceipt({
+        //   ...receipt.item[curr.items[x].id],
+        //   sharedby: receipt.item[curr.items[x].id].sharedby + 1,
+        // })
+
+        // setReceipt({
+        //   ...receipt,
+        //   item: receipt.item.map((item) =>
+        //     item.id === curr.items[x].id
+        //       ? { ...item, sharedby: item.sharedby + 1 }
+        //       : item
+        //   ),
+        // });
         // console.log(receipt.item[curr.items[x].id].sharedby);
       }
     } catch (error) {}
@@ -100,10 +113,6 @@ export default function Select() {
   useEffect(() => {
     calculateTotalPrice();
   }, [persons]);
-
-  // useEffect(() => {
-  //   setCurrentPersontoArr();
-  // }, [currentPerson]);
 
   const handleTotal = () => {
     const newTotal = persons.map((p) => p.total);
@@ -117,42 +126,47 @@ export default function Select() {
   const [total, setTotal] = useState([]);
 
   return (
-    <div className="flex min-h-screen flex-col items-center gap-y-4 p-24">
-      <div className="rounded-lg border border-transparent px-5 py-4 transition-colors border-gray-300 bg-gray-100 dark:border-neutral-700 dark:bg-neutral-800/30">
-        <h2>List name:</h2>
+    <div className="flex min-h-screen flex-col items-center gap-y-4 p-24 bg-[#FFFFFF]">
+      <div className="flex flex-col rounded-lg w-96 justify-end p-2">
+        <h2>Choose person:</h2>
 
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-3 gap-6 justify-stretch pl-2 pr-2">
           {persons.map((obj) => (
             <button
+              className=""
               key={obj.id}
               onClick={() => (setCurrentPerson(obj), handleColor())}
             >
-              <p className={`border-2 ${borderColor} rounded-md`}>{obj.name}</p>
+              <p className={`bg-[#aa0671] text-white rounded-md`}>{obj.name}</p>
             </button>
           ))}
         </div>
-        <div>Selected: {currentPerson && currentPerson.name}</div>
+        <div className="p-5 text-center px-24">
+          <div>Selected:</div>
+          <div className="bg-[#F8ECF5] rounded-lg">
+            {currentPerson ? currentPerson.name : "None selected"}
+          </div>
+        </div>
       </div>
 
       <div
-        className="rounded-lg border border-transparent px-5 py-4 transition-colors border-gray-300 bg-gray-100 dark:border-neutral-700 dark:bg-neutral-800/30
+        className="
         "
       >
-        <div>
-          Selected Items:
-          {displaySelected.map((str) => (
-            <div key={str.id}>{str}</div>
-          ))}
+        Selected Items:
+        <div className="bg-[#F8ECF5] rounded-lg ">
+          <div className="text-center">
+            {displaySelected && displaySelected.length ? (
+              displaySelected.map((str) => <p key={str.id}>{str}</p>)
+            ) : (
+              <p>None selected</p>
+            )}
+          </div>
         </div>
         <div className="flex flex-col">
           {receipt.item.map((ite) => (
             <button
-              className="m-1 flex flex-row gap-3"
-              style={{
-                border: `1px solid ${
-                  receipt && receipt.item.id === ite.id ? "blue" : "black"
-                }`,
-              }}
+              className="m-1 flex flex-row gap-3 bg-[#E2BED5] rounded-lg p-2"
               key={ite.id}
               onClick={() => {
                 setCurrentPerson({
@@ -188,10 +202,16 @@ export default function Select() {
           ))}
         </div>
       </div>
-      <button onClick={setCurrentPersontoArr}>Submit</button>
-      <div>
+      <button
+        className="bg-[#AA0671] text-white rounded-lg px-7"
+        onClick={setCurrentPersontoArr}
+      >
+        Enter
+      </button>
+      <div className="bg-[#F9E1F2] p-9 w-72 rounded-lg">
+        <b>Receipt</b>
         {persons.map((persons) => (
-          <div key={persons.id}>
+          <div className="content-center" key={persons.id}>
             <h3>
               {Number(persons.id) + 1}.{persons.name}
             </h3>
