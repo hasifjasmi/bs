@@ -1,5 +1,5 @@
 "use client";
-import { React, useState, useEffect } from "react";
+import { React, useState, useEffect, useRef } from "react";
 
 export default function Select() {
   const useForceUpdate = () => {
@@ -69,6 +69,20 @@ export default function Select() {
   }, []);
 
   const [displaySelected, setDisplaySelected] = useState([]);
+
+  const ulRef = useRef(null);
+  const copyListToClipboard = () => {
+    const ulContent = ulRef.current.innerText;
+    console.log(ulContent);
+    navigator.clipboard.writeText(ulContent).then(
+      () => {
+        alert("List copied to clipboard!");
+      },
+      (err) => {
+        console.error("Failed to copy: ", err);
+      }
+    );
+  };
 
   const calculateTotalPrice = () => {
     persons.forEach((persons) => {
@@ -206,32 +220,41 @@ export default function Select() {
       </button>
       <div className="bg-[#F9E1F2] p-9 w-72 rounded-lg">
         <b>Receipt</b>
-        {persons.map((persons) => (
-          <div className="content-center" key={persons.id}>
-            <h3>
-              {Number(persons.id) + 1}.{persons.name}
-            </h3>
-            <ul>
-              {persons.items.map((ite) => (
-                <li key={ite.id}>
-                  &nbsp;&nbsp;&nbsp;&nbsp;{ite.name}{" "}
-                  {parseFloat(
-                    ite.total / receipt.item[ite.id].sharedby
-                  ).toFixed(2)}
-                  {/* {console.log(ite)} */}
+        <div ref={ulRef}>
+          {persons.map((persons) => (
+            <div className="content-center" key={persons.id}>
+              <h3>
+                {Number(persons.id) + 1}.{persons.name}
+              </h3>
+              <ul>
+                {persons.items.map((ite) => (
+                  <li key={ite.id}>
+                    &nbsp;&nbsp;&nbsp;&nbsp;{ite.name}{" "}
+                    {parseFloat(
+                      ite.total / receipt.item[ite.id].sharedby
+                    ).toFixed(2)}
+                    {/* {console.log(ite)} */}
+                  </li>
+                ))}
+                <li>
+                  &nbsp;&nbsp;&nbsp;&nbsp;Tax: RM {taxPerPerons.toFixed(2)}
                 </li>
-              ))}
-              <li>&nbsp;&nbsp;&nbsp;&nbsp;Tax: RM {taxPerPerons.toFixed(2)}</li>
-              <li>&nbsp;&nbsp;&nbsp;&nbsp;SST: RM {sstPerPerson.toFixed(2)}</li>
-              <li>
-                &nbsp;&nbsp;&nbsp;&nbsp;Total: RM
-                {parseFloat(
-                  total[persons.id] + taxPerPerons + sstPerPerson
-                ).toFixed(2) || 0}
-              </li>
-            </ul>
-          </div>
-        ))}
+                <li>
+                  &nbsp;&nbsp;&nbsp;&nbsp;SST: RM {sstPerPerson.toFixed(2)}
+                </li>
+                <li>
+                  &nbsp;&nbsp;&nbsp;&nbsp;Total: RM
+                  {parseFloat(
+                    total[persons.id] + taxPerPerons + sstPerPerson
+                  ).toFixed(2) || 0}
+                </li>
+              </ul>
+            </div>
+          ))}
+        </div>
+        <button className="copy-button" onClick={copyListToClipboard}>
+          Copy List
+        </button>
       </div>
     </div>
   );
