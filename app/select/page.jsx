@@ -78,10 +78,10 @@ export default function Select() {
           totalPrice +
           Number(item.total) / Number(receipt.item[item.id].sharedby);
       });
-      console.log("Total Price: " + persons.name + " " + totalPrice);
+      // console.log("Total Price: " + persons.name + " " + totalPrice);
       persons.total = Number(totalPrice);
     });
-    console.log(persons.total);
+    // console.log(persons.total);
     handleTotal();
   };
   const setCurrentPersontoArr = () => {
@@ -92,20 +92,16 @@ export default function Select() {
       setPersons(newPerson); // set array
       for (let x in curr.items) {
         receipt.item[curr.items[x].id].sharedby++; // update sharedby for receipt array
-        // setReceipt({
-        //   ...receipt.item[curr.items[x].id],
-        //   sharedby: receipt.item[curr.items[x].id].sharedby + 1,
-        // })
 
         // setReceipt({
         //   ...receipt,
         //   item: receipt.item.map((item) =>
-        //     item.id === curr.items[x].id
+        //     Number(item.id) == Number(curr.items[x].id)
         //       ? { ...item, sharedby: item.sharedby + 1 }
         //       : item
         //   ),
         // });
-        // console.log(receipt.item[curr.items[x].id].sharedby);
+        console.log(Number(curr.items[x].id));
       }
     } catch (error) {}
     setDisplaySelected([]);
@@ -222,7 +218,7 @@ export default function Select() {
                   {parseFloat(
                     ite.total / receipt.item[ite.id].sharedby
                   ).toFixed(2)}
-                  {console.log(ite)}
+                  {/* {console.log(ite)} */}
                 </li>
               ))}
               <li>&nbsp;&nbsp;&nbsp;&nbsp;Tax: RM {taxPerPerons.toFixed(2)}</li>

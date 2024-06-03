@@ -87,16 +87,6 @@ export default function Home() {
           </div>
         </form>
       </div>
-      <ul type="1">
-        {formValues.map(
-          (obj, index) =>
-            obj.value && (
-              <li key={index}>
-                {index + 1}. {obj.value}
-              </li>
-            )
-        )}
-      </ul>
     </main>
   );
 }

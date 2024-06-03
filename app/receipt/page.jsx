@@ -141,9 +141,9 @@ export default function receipt() {
         </h2>
         <div className="flex flex-row right-3 gap-2 pb-1">
           <label className="pl-8"> Name:</label>
-          <label className="pl-[75px]"> qty:</label>
-          <label className="pl-5"> price:</label>
-          <label className="pl-5"> total:</label>
+          <label className="pl-[66px]">price:</label>
+          <label className="pl-6"> qty:</label>
+          <label className="pl-6"> total:</label>
         </div>
         {items.map((obj, index) => (
           <InputItems

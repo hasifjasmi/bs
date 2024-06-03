@@ -22,15 +22,7 @@ export default function InputItems({
           value={name}
           onChange={(e) => onChange(e, index)}
         />
-        <input
-          className="border border-black p-1 w-12"
-          placeholder={" qty"}
-          type={"number"}
-          id={item}
-          name="qty"
-          value={qty}
-          onChange={(e) => onChange(e, index)}
-        />
+
         <input
           className="border border-black p-1 w-16 text-left"
           placeholder={" price"}
@@ -38,6 +30,15 @@ export default function InputItems({
           id={item}
           name="price"
           value={price}
+          onChange={(e) => onChange(e, index)}
+        />
+        <input
+          className="border border-black p-1 w-12"
+          placeholder={" qty"}
+          type={"number"}
+          id={item}
+          name="qty"
+          value={qty}
           onChange={(e) => onChange(e, index)}
         />
         <input
