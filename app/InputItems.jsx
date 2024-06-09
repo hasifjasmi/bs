@@ -25,11 +25,11 @@ export default function InputItems({
 
         <input
           className="border border-black p-1 w-16 text-left"
-          placeholder={" price"}
+          placeholder={"price"}
           type="number"
           id={item}
           name="price"
-          value={price}
+          value={price ? price : null}
           onChange={(e) => onChange(e, index)}
         />
         <input

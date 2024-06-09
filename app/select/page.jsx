@@ -1,5 +1,6 @@
 "use client";
 import { React, useState, useEffect, useRef } from "react";
+import Copy from "./copy";
 
 export default function Select() {
   const useForceUpdate = () => {
@@ -76,7 +77,12 @@ export default function Select() {
     console.log(ulContent);
     navigator.clipboard.writeText(ulContent).then(
       () => {
-        alert("List copied to clipboard!");
+        showSuccess();
+
+        // reset to default state
+        setTimeout(() => {
+          resetToDefault();
+        }, 2000);
       },
       (err) => {
         console.error("Failed to copy: ", err);
@@ -84,6 +90,18 @@ export default function Select() {
     );
   };
 
+  const [displaySuccess, setDisplaySuccess] = useState("hidden");
+  const [displayDefault, setdisplayDefault] = useState("");
+
+  const showSuccess = () => {
+    setdisplayDefault("hidden");
+    setDisplaySuccess("");
+  };
+
+  const resetToDefault = () => {
+    setdisplayDefault("");
+    setDisplaySuccess("hidden");
+  };
   const calculateTotalPrice = () => {
     persons.forEach((persons) => {
       var totalPrice = 0.0;
@@ -167,7 +185,44 @@ export default function Select() {
         <div className="bg-[#F8ECF5] rounded-lg ">
           <div className="text-center">
             {displaySelected && displaySelected.length ? (
-              displaySelected.map((str) => <p key={str.id}>{str}</p>)
+              displaySelected.map((str) => (
+                <div
+                  key={str.id}
+                  className="flex flex-row justify-center items-center"
+                >
+                  <p className="flex">{str} </p>
+                  <button
+                    onClick={() => {
+                      console.log(currentPerson.items);
+                      setCurrentPerson((prevState) => ({
+                        ...prevState,
+                        items: prevState.items.filter(
+                          (item) => item.name !== str
+                        ),
+                      }));
+                      setDisplaySelected((prevState) =>
+                        prevState.filter((item) => item !== str)
+                      );
+                    }}
+                    className="flex relative left-14"
+                  >
+                    <svg
+                      class="h-4 w-4 text-slate-900"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      {" "}
+                      <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z" />{" "}
+                      <line x1="18" y1="9" x2="12" y2="15" />{" "}
+                      <line x1="12" y1="9" x2="18" y2="15" />
+                    </svg>
+                  </button>
+                </div>
+              ))
             ) : (
               <p>None selected</p>
             )}
@@ -219,7 +274,50 @@ export default function Select() {
         Enter
       </button>
       <div className="bg-[#F9E1F2] p-9 w-72 rounded-lg">
-        <b>Receipt</b>
+        <div className="flex flex-row gap-28">
+          <b>Receipt</b>
+          <button className="copy-button" onClick={copyListToClipboard}>
+            <span
+              id="default-message"
+              class={`inline-flex items-center ${displayDefault}`}
+            >
+              <svg
+                class="w-3 h-3 me-1.5"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 18 20"
+              >
+                <path d="M16 1h-3.278A1.992 1.992 0 0 0 11 0H7a1.993 1.993 0 0 0-1.722 1H2a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2Zm-3 14H5a1 1 0 0 1 0-2h8a1 1 0 0 1 0 2Zm0-4H5a1 1 0 0 1 0-2h8a1 1 0 1 1 0 2Zm0-5H5a1 1 0 0 1 0-2h2V2h4v2h2a1 1 0 1 1 0 2Z" />
+              </svg>
+              <span class="text-xs font-semibold">Copy</span>
+            </span>
+            <span
+              id="success-message"
+              class={`${displaySuccess} inline-flex items-center`}
+            >
+              <svg
+                class="w-3 h-3 text-blue-700 dark:text-blue-500 me-1.5"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 16 12"
+              >
+                <path
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M1 5.917 5.724 10.5 15 1.5"
+                />
+              </svg>
+              <span class="text-xs font-semibold text-blue-700 dark:text-blue-500">
+                Copied
+              </span>
+            </span>
+          </button>
+        </div>
+
         <div ref={ulRef}>
           {persons.map((persons) => (
             <div className="content-center" key={persons.id}>
@@ -229,11 +327,13 @@ export default function Select() {
               <ul>
                 {persons.items.map((ite) => (
                   <li key={ite.id}>
-                    &nbsp;&nbsp;&nbsp;&nbsp;{ite.name}{" "}
-                    {parseFloat(
-                      ite.total / receipt.item[ite.id].sharedby
-                    ).toFixed(2)}
-                    {/* {console.log(ite)} */}
+                    <div className="flex flex-row">
+                      &nbsp;&nbsp;&nbsp;&nbsp;{ite.name}{" "}
+                      {parseFloat(
+                        ite.total / receipt.item[ite.id].sharedby
+                      ).toFixed(2)}
+                      {/* {console.log(ite)} */}
+                    </div>
                   </li>
                 ))}
                 <li>
@@ -252,9 +352,6 @@ export default function Select() {
             </div>
           ))}
         </div>
-        <button className="copy-button" onClick={copyListToClipboard}>
-          Copy List
-        </button>
       </div>
     </div>
   );
