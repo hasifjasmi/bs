@@ -40,8 +40,14 @@ export default function receipt() {
     const values = [...items];
     var targeted = e.target.name;
     values[index][targeted] = e.target.value;
-    values[index]["total"] =
-      Number(values[index]["price"]) * Number(values[index]["qty"]);
+    if (qtyState) {
+      values[index]["total"] =
+        Number(values[index]["price"]) * Number(values[index]["qty"]);
+    } else {
+      values[index]["total"] = Number(values[index]["price"]);
+    }
+    console.log(qtyState);
+
     // console.log("ni val tagett " + values[index]["total"]);
     setItems(values);
     setReceipt({
@@ -123,6 +129,21 @@ export default function receipt() {
     window.location.href = "/select";
   };
 
+  const [colorQty, setColorQty] = useState("blue");
+  const [qtyState, setQtyState] = useState(true);
+
+  const handleQtyBtn = () => {
+    if (colorQty == "blue") {
+      setColorQty("gray");
+      setQtyState(false);
+      console.log(colorQty);
+    } else {
+      setColorQty("blue");
+      setQtyState(true);
+      console.log(colorQty);
+    }
+  };
+
   return (
     <div className="flex min-h-screen flex-col items-center gap-y-4 p-24 bg-white">
       <div className="rounded-lg border border-transparent px-5 py-4 transition-colors border-gray-300 bg-[#F8ECF5]">
@@ -138,7 +159,14 @@ export default function receipt() {
       <div className="rounded-lg border border-transparent px-5 transition-colors border-gray-300 bg-[#F9E1F2]">
         <h2>
           <b>Receipt:</b>
+          <button
+            onClick={handleQtyBtn}
+            className={`bg-${colorQty}-500 p-2 rounded-full text-xs ml-36 mt-1`}
+          >
+            ignore qty
+          </button>
         </h2>
+
         <div className="flex flex-row right-3 gap-2 pb-1">
           <label className="pl-8"> Name:</label>
           <label className="pl-[66px]">price:</label>
@@ -153,6 +181,7 @@ export default function receipt() {
             index={index}
             placeholder={obj.id + 1}
             deleteField={handleDeleteField}
+            qtyState={qtyState}
           />
         ))}
         <div className="flex flex-col">

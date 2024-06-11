@@ -6,6 +6,7 @@ export default function InputItems({
   index,
   placeholder,
   deleteField,
+  qtyState,
 }) {
   const { item, name, qty, price } = objValue;
 
@@ -47,7 +48,7 @@ export default function InputItems({
           type="number"
           id={item}
           name="total"
-          value={price * qty}
+          value={qtyState ? qty * price : price}
           onChange={(e) => onChange(e, index)}
         />
         <button onClick={(e) => deleteField(e, index)}>X</button>
