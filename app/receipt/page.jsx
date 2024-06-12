@@ -129,16 +129,16 @@ export default function receipt() {
     window.location.href = "/select";
   };
 
-  const [colorQty, setColorQty] = useState("blue");
+  const [colorQty, setColorQty] = useState("bg-blue-500");
   const [qtyState, setQtyState] = useState(true);
 
   const handleQtyBtn = () => {
-    if (colorQty == "blue") {
-      setColorQty("gray");
+    if (colorQty === "bg-blue-500") {
+      setColorQty("bg-gray-500");
       setQtyState(false);
       console.log(colorQty);
     } else {
-      setColorQty("blue");
+      setColorQty("bg-blue-500");
       setQtyState(true);
       console.log(colorQty);
     }
@@ -161,9 +161,9 @@ export default function receipt() {
           <b>Receipt:</b>
           <button
             onClick={handleQtyBtn}
-            className={`bg-${colorQty}-500 p-2 rounded-full text-xs ml-36 mt-1`}
+            className={`${colorQty} p-2 rounded-full text-xs ml-36 mt-1 text-white font-bold`}
           >
-            ignore qty
+            Ignore qty
           </button>
         </h2>
 
