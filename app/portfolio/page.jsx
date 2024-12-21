@@ -4,13 +4,16 @@ import useSound from "use-sound";
 
 export default function Meme() {
   const getout = "/GETOUT.mp3"; // Correctly reference the audio file
-  const [play] = useSound(getout);
+  const [play, { stop }] = useSound(getout);
 
   return (
     <>
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
         <div
-          onClick={play}
+          onClick={() => {
+            stop();
+            play();
+          }}
           class="button w-40 h-16 bg-red-500 rounded-lg cursor-pointer select-none
     active:translate-y-2  active:[box-shadow:0_0px_0_0_#b91c1c,0_0px_0_0_#b91c1c]
     active:border-b-[0px]
