@@ -6,11 +6,11 @@ export default function Meme() {
   const getout = "/GETOUT.mp3"; // Correctly reference the audio file
   const [play, { stop }] = useSound(getout);
   const salam = "/assalam.mp3"; // Correctly reference the audio file
-  const [play1, { stop1 }] = useSound(salam);
+  const [play1, stop1 ] = useSound(salam);
 
   return (
     <>
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 gap-7">
         <div
           onClick={() => {
             stop();
@@ -29,7 +29,7 @@ export default function Meme() {
         </div>
         <div
           onClick={() => {
-            stop1();
+            stop1.stop();
             play1();
           }}
           class="button w-40 h-16 bg-red-500 rounded-lg cursor-pointer select-none
