@@ -80,6 +80,7 @@ export default function Form() {
               id="amount"
               type="number"
               step="1"
+              inputMode="decimal"
               placeholder="Enter amount"
               value={data.amount}
               onChange={(e) => handleChange("amount", e.target.value)}
