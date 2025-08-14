@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import BalanceCard from "../BalanceCard/page";
 import { Input } from "@/components/ui/input";
 import {
@@ -15,39 +15,70 @@ import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { CheckCircle2Icon } from "lucide-react";
+import TopRecent from "@/components/toprecent";
 
 const categories = ["Savings", "Food", "Commitments", "Kahwin", "Misc"];
 
 export default function Form() {
   const [data, setData] = useState({ category: "", amount: "", remarks: "" });
   const [showSuccess, setShowSuccess] = useState(false);
+  const [spendingData, setSpendingData] = useState(null);
   const balanceRef = useRef(null);
+
+  // Fetch data function
+  const fetchSpendingData = async () => {
+    try {
+      const response = await fetch(
+        "https://script.google.com/macros/s/AKfycbxVFhuAEwOCZn8eMDg1HanYI5Ss25yZdTCqB9xm_qqpVRzyWWyKLHAl1TqUYrVWZsvrBQ/exec"
+      );
+      const result = await response.json();
+      setSpendingData(result);
+    } catch (error) {
+      console.error("Error fetching spending data:", error);
+    }
+  };
+
+  // Fetch data on component mount
+  useEffect(() => {
+    fetchSpendingData();
+  }, []);
 
   const handleChange = (name, value) => {
     setData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
-    setShowSuccess(true);
-    setTimeout(() => setShowSuccess(false), 3000); // Hide success message after 3 seconds
     e.preventDefault();
 
-    await fetch(
-      "https://script.google.com/macros/s/AKfycbxVFhuAEwOCZn8eMDg1HanYI5Ss25yZdTCqB9xm_qqpVRzyWWyKLHAl1TqUYrVWZsvrBQ/exec",
-      {
-        method: "POST",
-        body: JSON.stringify(data),
+    setShowSuccess(true);
+    setTimeout(() => setShowSuccess(false), 3000);
+
+    try {
+      await fetch(
+        "https://script.google.com/macros/s/AKfycbxVFhuAEwOCZn8eMDg1HanYI5Ss25yZdTCqB9xm_qqpVRzyWWyKLHAl1TqUYrVWZsvrBQ/exec",
+        {
+          method: "POST",
+          body: JSON.stringify(data),
+        }
+      );
+
+      setData({ category: "", amount: "", remarks: "" });
+
+      if (balanceRef.current) {
+        balanceRef.current.fetchData();
       }
-    );
-    setData({ category: "", amount: "", remarks: "" });
-    if (balanceRef.current) {
-      balanceRef.current.fetchData(); // <- Call the internal function
+
+      // Fetch updated data after successful submission
+      await fetchSpendingData();
+    } catch (error) {
+      console.error("Error submitting data:", error);
     }
   };
 
   return (
     <div className="flex flex-col justify-center items-center min-h-screen px-4">
       <BalanceCard ref={balanceRef} />
+
       <div className="w-full max-w-md">
         <form
           onSubmit={handleSubmit}
@@ -79,7 +110,7 @@ export default function Form() {
             <Input
               id="amount"
               type="number"
-              step="1"
+              step="0.01"
               inputMode="decimal"
               placeholder="Enter amount"
               value={data.amount}
@@ -105,6 +136,7 @@ export default function Form() {
             Submit
           </Button>
         </form>
+
         <AnimatePresence>
           {showSuccess && (
             <motion.div
@@ -126,6 +158,11 @@ export default function Form() {
             </motion.div>
           )}
         </AnimatePresence>
+      </div>
+
+      {/* Pass spending data to TopRecent component */}
+      <div className="">
+        <TopRecent data={spendingData} />
       </div>
     </div>
   );
