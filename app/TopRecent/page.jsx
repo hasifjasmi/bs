@@ -2,7 +2,7 @@
 import { forwardRef, useImperativeHandle, useState, useEffect } from "react";
 import { Card, CardTitle, CardContent } from "@/components/ui/card";
 import React from "react";
-const BalanceCard = forwardRef((props, ref) => {
+const TopRecent = forwardRef((props, ref) => {
   const [data, setData] = useState({ balance: {}, haventPaid: {} });
 
   const fetchData = async () => {
@@ -47,13 +47,7 @@ const BalanceCard = forwardRef((props, ref) => {
               <React.Fragment key={category}>
                 <span className="text-gray-600">{category}</span>
                 <span className="text-right">
-                  {Number(amount) === 0 ? (
-                    <span className="text-green-600 font-semibold">
-                      All paid.
-                    </span>
-                  ) : (
-                    `RM ${Number(amount).toFixed(2)}`
-                  )}
+                  RM {Number(amount).toFixed(2)}
                 </span>
               </React.Fragment>
             ))}
