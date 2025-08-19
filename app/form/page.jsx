@@ -77,7 +77,9 @@ export default function Form() {
 
   return (
     <div className="flex flex-col justify-center items-center min-h-screen px-4">
-      <BalanceCard ref={balanceRef} />
+      <div className="pt-6">
+        <BalanceCard ref={balanceRef} />
+      </div>
 
       <div className="w-full max-w-md">
         <form
