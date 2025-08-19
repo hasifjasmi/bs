@@ -161,7 +161,7 @@ export default function Form() {
       </div>
 
       {/* Pass spending data to TopRecent component */}
-      <div className="">
+      <div className="pt-6 w-full max-w-3xl">
         <TopRecent data={spendingData} />
       </div>
     </div>
